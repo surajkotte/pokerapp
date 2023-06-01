@@ -1,0 +1,13 @@
+.contentCss{
+    display: flex;
+    justify-content: space-evenly;
+    /* width: 108%; */
+    margin: auto;
+    height: 62px;
+    border-radius: 25px;
+    align-items: center;
+}
+.contentCss input{
+    text-align: center;
+    font-weight: 550px;
+  }

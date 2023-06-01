@@ -1,0 +1,14 @@
+.display-div{
+    width: 85%;
+    height: 430px;
+    border-style: solid;
+    /* background-color: beige; */
+    /* position: absolute; */
+    overflow-y: scroll;
+    /* margin-left: 172px; */
+    border-width: thin;
+    /* margin-right: 40px; */
+    border-radius: 30px;
+    margin: auto;
+}
+
