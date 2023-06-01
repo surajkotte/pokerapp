@@ -1,6 +1,7 @@
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from '@mui/material/DialogActions';
 import * as React from "react";
 import { useState } from "react";
 import "../styles/dialogbox.css";
@@ -10,11 +11,57 @@ import Data1 from "./Data1";
 import Data2 from "./Data2";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from '@mui/material/IconButton';
+import * as FileSaver from 'file-saver';
+import XLSX from 'sheetjs-style';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 
 
 export default function AlertDialogSlide(props) {
   const [open, setOpen] = React.useState(props.openDialog);
   const [loading, setLoading] = useState(false);
+  const [isDownlaodVisible , setIsDownloadVisible] = useState(true);
+  var XLData = [];
+  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
+  
+  const exportToCSV = () => {
+    const date = new Date();
+
+let currentDay= String(date.getDate()).padStart(2, '0');
+
+let currentMonth = String(date.getMonth()+1).padStart(2,"0");
+
+let currentYear = date.getFullYear();
+
+props.ItemDetails.map((Item)=>{
+  var StartingChips = Item.startingBuyIn*50;
+  var Money = Item.startingBuyIn*25;
+  var onechipscost = 0.5;
+  var profitorloss = Math.abs(Money-(Item.endingBid*onechipscost));
+  if(StartingChips>Item.endingBid){
+      profitorloss  = '-'+profitorloss;
+  }
+  XLData.push({
+    row: Item.row,
+    name: Item.name,
+    buyins: Item.startingBuyIn,
+    money: Money,
+    startingChips:StartingChips,
+    endingChips:Item.endingBid,
+    profitloss: profitorloss,
+  });
+})
+
+// we will display the date as DD-MM-YYYY 
+
+let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
+    var fileName = 'pokergame+ '+currentDate;
+    const ws = XLSX.utils.json_to_sheet(XLData);
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], {type: fileType});
+    FileSaver.saveAs(data, fileName + fileExtension);
+}
 
   const [buttonClick, setButtonClick] = useState(false);
 
@@ -94,6 +141,9 @@ export default function AlertDialogSlide(props) {
         <DialogContent>
           {!buttonClick ? <Data1 ItemDetails={props.ItemDetails} /> : <Data2 ItemDetails={props.ItemDetails}/>}
         </DialogContent>
+        <DialogActions>
+          {isDownlaodVisible && <Button onClick={exportToCSV}><FileDownloadOutlinedIcon/> Download</Button>}
+        </DialogActions>
       </Dialog>
     </>
   );
