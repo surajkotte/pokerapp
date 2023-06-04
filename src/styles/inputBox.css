@@ -9,3 +9,9 @@
 .MuiButtonBase-root{
     margin-top: 9px;
 }
+@media screen and (max-width: 599px) {
+    .input-class{
+        display: flex;
+        justify-content: center;
+    }
+}

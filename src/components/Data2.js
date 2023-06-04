@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Data2Content from "./Data2Content";
 var message = [
-  " Please check the data ",
+  "Please Add more users",
   "Starting Chips count And Ending Chips count doesnt match",
   "Starting Money and Ending Money doesnt match",
 ];
 const Data2 = (props) => {
   const [dataPresent, setDataPresent] = useState(false);
+  const [messageIndex,setMessageIndex] = useState(0);
   var data1 = [];
   var StartingChipsCount = 0;
   var EndingChipsCount = 0;
@@ -14,7 +15,6 @@ const Data2 = (props) => {
   var EndingMoney = 0;
   var positiveBal = [];
   var negativeBal = [];
-  var messageIndex = 0;
   if (dataPresent) {
     props.ItemDetails.map((Item) => {
       var StartingChips = Item.startingBuyIn * 50;
@@ -45,7 +45,7 @@ const Data2 = (props) => {
     if (StartingChipsCount == EndingChipsCount) {
       calculateData();
     } else {
-      messageIndex = 2;
+      setMessageIndex(1);
       setDataPresent(false);
     }
   }
@@ -95,6 +95,7 @@ const Data2 = (props) => {
     if (props.ItemDetails.length > 1) {
       setDataPresent(true);
     } else {
+      setMessageIndex(0);
       setDataPresent(false);
     }
   }, [props]);

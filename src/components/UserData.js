@@ -47,7 +47,7 @@ const UserData = (props) => {
         <input
           disabled
           type="text"
-          style={{ borderStyle: "none", outline: "none", fontSize: "15px",color:'black',background:'white'}}
+          style={{ borderStyle: "none", outline: "none", fontSize: "15px",color:'black',background:'white',marginLeft:'5px'}}
           value={props.name}
         />
         <InputNumber
@@ -63,12 +63,14 @@ const UserData = (props) => {
           min={1}
           max={999}
           value={buyInc}
+          style={{marginRight:'5px'}}
           onChange={onBuyInChange}
         />
         <TextField
           label="Chips"
           size="small"
           color="secondary"
+          style={{marginRight:'5px'}}
           value={buyInc*oneBuyInToChips}
           focused
           InputProps={{
