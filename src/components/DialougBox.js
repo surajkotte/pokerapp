@@ -1,7 +1,7 @@
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from '@mui/material/DialogActions';
+import DialogActions from "@mui/material/DialogActions";
 import * as React from "react";
 import { useState } from "react";
 import "../styles/dialogbox.css";
@@ -10,60 +10,151 @@ import Box from "@mui/material/Box";
 import Data1 from "./Data1";
 import Data2 from "./Data2";
 import CloseIcon from "@mui/icons-material/Close";
-import IconButton from '@mui/material/IconButton';
-import * as FileSaver from 'file-saver';
-import XLSX from 'sheetjs-style';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-
+import IconButton from "@mui/material/IconButton";
+import * as FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function AlertDialogSlide(props) {
   const [open, setOpen] = React.useState(props.openDialog);
   const [loading, setLoading] = useState(false);
-  const [isDownlaodVisible , setIsDownloadVisible] = useState(true);
-  var XLData = [];
-  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  const fileExtension = '.xlsx';
-  
-  const exportToCSV = () => {
-    const date = new Date();
-
-let currentDay= String(date.getDate()).padStart(2, '0');
-
-let currentMonth = String(date.getMonth()+1).padStart(2,"0");
-
-let currentYear = date.getFullYear();
-
-props.ItemDetails.map((Item)=>{
-  var StartingChips = Item.startingBuyIn*50;
-  var Money = Item.startingBuyIn*25;
-  var onechipscost = 0.5;
-  var profitorloss = Math.abs(Money-(Item.endingBid*onechipscost));
-  if(StartingChips>Item.endingBid){
-      profitorloss  = '-'+profitorloss;
-  }
-  XLData.push({
-    row: Item.row,
-    name: Item.name,
-    buyins: Item.startingBuyIn,
-    money: Money,
-    startingChips:StartingChips,
-    endingChips:Item.endingBid,
-    profitloss: profitorloss,
-  });
-})
-
-// we will display the date as DD-MM-YYYY 
-
-let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
-    var fileName = 'pokergame+ '+currentDate;
-    const ws = XLSX.utils.json_to_sheet(XLData);
-    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], {type: fileType});
-    FileSaver.saveAs(data, fileName + fileExtension);
-}
-
   const [buttonClick, setButtonClick] = useState(false);
+  const [isDownlaodVisible, setIsDownloadVisible] = useState(true);
+  var negativeBal = [];
+  var positiveBal = [];
+  var data1 = [];
+  var XLData = [];
+  var StartingChipsCount = 0;
+  var StartingMoney = 0;
+  var EndingMoney = 0;
+  var EndingChipsCount = 0;
+  const fileType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
+
+  function calculateTransactionData() {
+    positiveBal = positiveBal.sort(function (a, b) {
+      return b.money - a.money;
+    });
+
+    negativeBal = negativeBal.sort(function (a, b) {
+      return b.money - a.money;
+    });
+    /* need to work on logic */
+    var i = 0,
+      j = 0;
+    while (i < positiveBal.length || j < negativeBal.length) {
+      if (negativeBal[j].money < positiveBal[i].money) {
+        data1.push({
+          from: negativeBal[j].name,
+          to: positiveBal[i].name,
+          Amount: negativeBal[j].money,
+        });
+        positiveBal[i].money -= negativeBal[j].money;
+        j++;
+      } else if (negativeBal[j].money == positiveBal[i].money) {
+        data1.push({
+          from: negativeBal[j].name,
+          to: positiveBal[i].name,
+          Amount: positiveBal[i].money,
+        });
+        positiveBal[i].money -= negativeBal[j].money;
+        i++;
+        j++;
+      } else {
+        data1.push({
+          from: negativeBal[j].name,
+          to: positiveBal[i].name,
+          Amount: positiveBal[i].money,
+        });
+        negativeBal[j].money = negativeBal[j].money - positiveBal[i].money;
+        i++;
+      }
+    }
+  }
+
+  const exportToCSV = () => {
+    if (validateData()) {
+      const date = new Date();
+
+      let currentDay = String(date.getDate()).padStart(2, "0");
+
+      let currentMonth = String(date.getMonth() + 1).padStart(2, "0");
+
+      let currentYear = date.getFullYear();
+
+      props.ItemDetails.map((Item) => {
+        var StartingChips = Item.startingBuyIn * 50;
+        var Money = Item.startingBuyIn * 25;
+        var onechipscost = 0.5;
+        var profitorloss = Math.abs(Money - Item.endingBid * onechipscost);
+        if (StartingChips > Item.endingBid) {
+          profitorloss = "-" + profitorloss;
+        }
+        XLData.push({
+          row: Item.row,
+          name: Item.name,
+          buyins: Item.startingBuyIn,
+          money: Money,
+          startingChips: StartingChips,
+          endingChips: Item.endingBid,
+          profitloss: profitorloss,
+        });
+      });
+
+      props.ItemDetails.map((Item) => {
+        var StartingChips = Item.startingBuyIn * 50;
+        StartingChipsCount += StartingChips;
+        EndingChipsCount += parseInt(Item.endingBid);
+        var Money = Item.startingBuyIn * 25;
+        StartingMoney += Money;
+        var onechipscost = 0.5;
+        var profitorloss = Math.abs(Money - Item.endingBid * 0.5);
+        EndingMoney += profitorloss;
+        if (StartingChips > Item.endingBid) {
+          profitorloss = "-" + profitorloss;
+        }
+        if (profitorloss < 0) {
+          negativeBal.push({
+            name: Item.name,
+            money: Math.abs(profitorloss),
+          });
+        } else {
+          positiveBal.push({
+            name: Item.name,
+            money: Math.abs(profitorloss),
+          });
+        }
+      });
+
+      if (StartingChipsCount == EndingChipsCount) {
+        calculateTransactionData();
+        let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
+        var fileName = "pokergame+ " + currentDate;
+        const ws = XLSX.utils.json_to_sheet(XLData);
+        const ws2 = XLSX.utils.json_to_sheet(data1);
+        // const wb = { Sheets: { data: ws }, SheetNames: ["data","data2"] };
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "ProfitLossData");
+        XLSX.utils.book_append_sheet(wb, ws2, "MoneySplitData");
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+      } else {
+        toast("Chips count doesnt match, check data");
+      }
+    }else{
+      toast("Please add atleast two users");
+    }
+  };
+
+  function validateData() {
+    if(props.ItemDetails.length>1){
+      return true;
+    }
+    return false;
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -139,13 +230,20 @@ let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
           </Box>
         </DialogTitle>
         <DialogContent>
-          {!buttonClick ? <Data1 ItemDetails={props.ItemDetails} /> : <Data2 ItemDetails={props.ItemDetails}/>}
+          {!buttonClick ? (
+            <Data1 ItemDetails={props.ItemDetails} />
+          ) : (
+            <Data2 ItemDetails={props.ItemDetails} />
+          )}
         </DialogContent>
         <DialogActions>
-          {isDownlaodVisible && <Button onClick={exportToCSV}><FileDownloadOutlinedIcon/> Download</Button>}
+          {isDownlaodVisible && (
+            <Button onClick={exportToCSV}>
+              <FileDownloadOutlinedIcon /> Download
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>
   );
 }
-

@@ -134,7 +134,6 @@ const Data1 = (props) => {
           profitloss: profitorloss,
         });
       })
-console.log(data);
   return <Table
     columns={columns}
     dataSource={data}

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import Data2Content from "./Data2Content";
+import Item from "antd/es/list/Item";
 var message = [
   "Please Add more users",
   "Starting Chips count And Ending Chips count doesnt match",
-  "Starting Money and Ending Money doesnt match",
+  "Starting and Ending money of all players matched",
 ];
 const Data2 = (props) => {
   const [dataPresent, setDataPresent] = useState(false);
-  const [messageIndex,setMessageIndex] = useState(0);
+  const [messageIndex, setMessageIndex] = useState(0);
+  var indexmessage3 = true;
   var data1 = [];
   var StartingChipsCount = 0;
   var EndingChipsCount = 0;
@@ -61,44 +63,52 @@ const Data2 = (props) => {
     /* need to work on logic */
     var i = 0,
       j = 0;
-    while (i < positiveBal.length || j < negativeBal.length) {
-      if (negativeBal[j].money < positiveBal[i].money) {
-        data1.push({
-          name1: negativeBal[j].name,
-          name2: positiveBal[i].name,
-          money: negativeBal[j].money,
-        });
-        positiveBal[i].money -= negativeBal[j].money;
-        j++;
-      } else if (negativeBal[j].money == positiveBal[i].money) {
-        data1.push({
-          name1: negativeBal[j].name,
-          name2: positiveBal[i].name,
-          money: positiveBal[i].money,
-        });
-        positiveBal[i].money -= negativeBal[j].money;
-        i++;
-        j++;
-      } else {
-        data1.push({
-          name1: negativeBal[j].name,
-          name2: positiveBal[i].name,
-          money: positiveBal[i].money,
-        });
-        negativeBal[j].money = negativeBal[j].money - positiveBal[i].money;
-        i++;
+    if (positiveBal.length > 0 && negativeBal.length > 0) {
+      indexmessage3 = true;
+      while (i < positiveBal.length || j < negativeBal.length) {
+        if (negativeBal[j].money < positiveBal[i].money) {
+          data1.push({
+            name1: negativeBal[j].name,
+            name2: positiveBal[i].name,
+            money: negativeBal[j].money,
+          });
+          positiveBal[i].money -= negativeBal[j].money;
+          j++;
+        } else if (negativeBal[j].money == positiveBal[i].money) {
+          data1.push({
+            name1: negativeBal[j].name,
+            name2: positiveBal[i].name,
+            money: positiveBal[i].money,
+          });
+          positiveBal[i].money -= negativeBal[j].money;
+          i++;
+          j++;
+        } else {
+          data1.push({
+            name1: negativeBal[j].name,
+            name2: positiveBal[i].name,
+            money: positiveBal[i].money,
+          });
+          negativeBal[j].money = negativeBal[j].money - positiveBal[i].money;
+          i++;
+        }
       }
+    }else{
+      indexmessage3 = false;
     }
   }
 
   useEffect(() => {
+    if(!indexmessage3){
+      setMessageIndex(3);
+    }
     if (props.ItemDetails.length > 1) {
       setDataPresent(true);
     } else {
       setMessageIndex(0);
       setDataPresent(false);
     }
-  }, [props]);
+  }, [props,indexmessage3]);
   return (
     <>
       {dataPresent ? (
@@ -112,6 +122,7 @@ const Data2 = (props) => {
             fontFamily: "cursive",
             color: "darkblue",
             height: "100%",
+            fontSize: "25px",
           }}
         >
           {message[messageIndex]}

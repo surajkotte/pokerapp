@@ -24,7 +24,6 @@ const UserData = (props) => {
     props.deleteUserdata(props.row);
   }
   function updateEndingBid(e) {
-    console.log(e+" in updateEndingBid");
     setEndingBid(e.target.value);
     props.updatingEndingBuyIn(props.row,e.target.value);
   }
@@ -35,7 +34,6 @@ const UserData = (props) => {
     Setchips((buyInchips*oneBuyInToChips));
   };
   useEffect(() => {
-    console.log("onTriggerChangeinuseeffect ", props.name + " " + props.startingBuyIn+" "+localStorage.getItem([props.row]));
     setBuyInc(props.startingBuyIn);
     Setchips(props.startingBuyIn*oneBuyInToChips);
   }, [props]);

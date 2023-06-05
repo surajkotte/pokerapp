@@ -32,7 +32,6 @@ const InputBox = () => {
   }
 
   function UpdateEndingBid(row,value){
-    console.log(" UpdateEndingBid "+row+" "+value);
     const newData1 = useData.filter((item) => {
       if(item.row == row){
         item.endingBid = value;
@@ -52,7 +51,6 @@ const InputBox = () => {
     var rowVal = 1;
     newData.map((item) => {
       item.row = rowVal;
-      console.log(item.startingBuyIn+" "+item.name);
       rowVal++;
     });
     SetUserData(newData);
@@ -132,18 +130,6 @@ const InputBox = () => {
         >
           Add
         </Button>
-        <ToastContainer
-          position="top-right"
-          autoClose={1500}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
       </div>
       <div style={{ height: "2rem" }}></div>
       <DisplayTable

@@ -6,34 +6,33 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AlertDialogSlide from "./DialougBox";
 import { useEffect, useState } from "react";
 import { isVisible } from "@testing-library/user-event/dist/utils";
+import { toast } from "react-toastify";
 
 const DisplayTable = (props) => {
-  var data=[];
+  var data = [];
   const [IsVisble, SetIsVisible] = useState(false);
   function deleteUserdata(id) {
     props.deleteData(id);
   }
-  function clickIsOpen(){
-    console.log(" is user");
-    console.log(props.userDetaials);
-
-    SetIsVisible(true);
-
-
+  function clickIsOpen() {
+    if (props.userDetaials.length < 1) {
+      toast("Please Enter Data");
+    } else {
+      SetIsVisible(true);
+    }
   }
-  function clearAllData(){
+  function clearAllData() {
     props.deleteAll();
   }
-  function updateBuyIn(row,buyInval){
-    props.updateStartingBuyIn(row,buyInval);
+  function updateBuyIn(row, buyInval) {
+    props.updateStartingBuyIn(row, buyInval);
   }
 
-  function updateEndingBuyIn(row,val){
-    props.UpdateEndingBid(row,val);
+  function updateEndingBuyIn(row, val) {
+    props.UpdateEndingBid(row, val);
   }
-  useEffect(()=>{
-    //console.log("onTriggerChange",props.userDetaials);
-  },[props.userDetaials])
+  useEffect(() => {
+  }, [props.userDetaials]);
   return (
     <div style={{ width: "100%" }}>
       <div className="display-div">
@@ -72,7 +71,11 @@ const DisplayTable = (props) => {
       >
         clear
       </Button>
-      <AlertDialogSlide ItemDetails={props.userDetaials} openDialog={IsVisble} closeDialog={(visibility)=>SetIsVisible(visibility)}/>
+      <AlertDialogSlide
+        ItemDetails={props.userDetaials}
+        openDialog={IsVisble}
+        closeDialog={(visibility) => SetIsVisible(visibility)}
+      />
     </div>
   );
 };
