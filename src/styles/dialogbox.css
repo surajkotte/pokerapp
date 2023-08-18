@@ -1,0 +1,73 @@
+.MuiPaper-root{
+    width: 900px;
+    height: 700px;
+}
+ul.nav {
+    height: 40px;
+    width: 50%;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #39A2DB;
+    border-radius: 2rem;
+    padding-left: 0px;
+    @media (max-width: 768px) {
+      width: 90%;
+    }
+  }
+  ul.nav li {
+    width: 100%;
+    padding: 1rem;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.7s;
+  }
+  ul.nav li:nth-child(2) {
+    border-radius: 0;
+  }
+  ul.nav li:hover {
+    background: rgba(50, 224, 196, 0.15);
+  }
+  ul.nav li.active {
+    background: #39A2DB;
+  }
+  .ButtonGRP{
+    height: 45px;
+    width: 40%;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 25px;
+    border-style: groove;
+    border-color: blue;
+    border-width: 0.5px;
+  }
+  #data1btn{
+    border-radius: 25px 0px 0px 25px;
+    background: #9565db;
+  }
+  #data2btn{    
+    border-radius: 0px 25px 25px 0px;
+    background: #9565db;
+  }
+
+  .scrollableDiv{
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    border-style: groove;
+    border-width: thin;
+    border-radius: 30px;
+    margin: auto;
+  }
+  .data1boxview{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: auto;
+    height: 11%;
+    border-radius: 25px;
+    align-items: center;
+  }
+ 
