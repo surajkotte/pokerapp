@@ -44,7 +44,7 @@ export class DataProvider {
   }
   calculateAdjustmentData() {
     this.SortPositiveBal();
-    this.SortPositiveBal();
+    this.SortNegativeBal();
     var i = 0,
       j = 0;
     if (this.positiveBal.length > 0 && this.negativeBal.length > 0) {
