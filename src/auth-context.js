@@ -9,7 +9,7 @@ const AuthContext = React.createContext({
 
 export const AuthContextProvider = (props) => {
   const [oneBuyInToChips, setOneBuyInToChips] = useState(50);
-  const [oneBuyInToDollers, setOneBuyInToDollers] = useState(50);
+  const [oneBuyInToDollers, setOneBuyInToDollers] = useState(25);
   const oneChipCost = oneBuyInToDollers / oneBuyInToChips;
   return (
     <AuthContext.Provider
